@@ -21,6 +21,19 @@ Written by Alex S Grebenschikov (www.poralix.com):
 - litespeed_hits
 - litespeed_requests_post
 
+# Installation
+
+Simple if you have `git` installed:
+
+```
+cd /etc/munin/plugins
+git clone https://github.com/poralix/munin-litespeed.git
+mv munin-litespeed/litespeed_* .
+rm -rf munin-litespeed/
+chmod 755 litespeed_*
+service munin-node restart
+```
+
 # Configuration
 
 Might need to add
