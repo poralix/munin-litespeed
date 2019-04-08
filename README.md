@@ -1,6 +1,6 @@
 # munin-litespeed
 
-A set of munin-plugins to monitor LiteSpeed updated work under CentOS 7.
+A set of munin-plugins to monitor LiteSpeed updated for CentOS 7.
 
 Forked from https://github.com/burner1024/munin-litespeed
 
