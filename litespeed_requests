@@ -1,0 +1,58 @@
+#!/usr/bin/perl
+###################################################
+# LiteSpeed webserver : number of requests
+###################################################
+###################################################
+# Modified by Alex $ Mon Apr  8 10:57:04 CEST 2019
+# To work under CentOS Linux release 7
+# www.poralix.com
+##################################################
+if ( $ARGV[0] eq 'autoconf' ) {
+   if ( -e '/dev/shm/status/.rtreport' ) {
+      print "yes\n";
+      exit;
+   } else {
+      print "no\n";
+      exit 1;
+   }
+}
+
+if ( $ARGV[0] eq 'config' ) {
+   print "graph_title Litespeed : requests\n";
+   print "graph_args --base 1000 -l 0\n";
+   print "graph_scale no\n";
+   print "graph_vlabel requests\n";
+   print "graph_category litespeed\n";
+   print "rqtot.label Total Req\n";
+   print "rqtot.draw LINE1\n";
+   print "rqip.label ReqInProcess\n";
+   print "rqip.draw AREA\n";
+   print "rqps.label ReqPerSecond\n";
+   print "rqps.draw LINE1\n";
+   print "rqtot.label Total Req\n";
+   print "rqtot.draw LINE1\n";
+   exit 0;
+}
+
+if ( ! -e '/dev/shm/status/.rtreport' ) {
+   print "rqip.value 0\n";
+   print "rqps.value 0\n";
+   print "rqtot.value 0\n";
+   exit 0;
+}
+
+@stats = `ls -a /dev/shm/status/.rtreport*`;
+foreach $rep ( @stats ) {
+   open IN, "<$rep";
+   while ( <IN> ) {
+      if ( /REQ_PROCESSING: (\d+), REQ_PER_SEC: ([0-9]*\.?[0-9]+), TOT_REQS: (\d+)/ ) {
+         $rqtot += $3;
+         $rqip += $1;
+         $rqps += $2;
+         last;
+      }
+   }
+   close IN;
+}
+print "rqtot.value $rqtot\nrqip.value $rqip\nrqps.value $rqps\n";
+exit;

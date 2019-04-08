@@ -1,0 +1,60 @@
+#!/usr/bin/perl
+##################################################
+# LiteSpeed webserver : connections
+###################################################
+# Modified by Alex $ Mon Apr  8 10:57:04 CEST 2019
+# To work under CentOS Linux release 7
+# www.poralix.com
+##################################################
+if ( $ARGV[0] eq 'autoconf' ) {
+   if ( -e '/dev/shm/status/.rtreport' ) {
+      print "yes\n";
+      exit;
+   } else {
+      print "no\n";
+      exit 1;
+   }
+}
+
+if ( $ARGV[0] eq 'config' ) {
+   open IN, "</dev/shm/status/.rtreport";
+   while ( <IN> ) {
+      if ( /^MAXCONN: (\d+),/ ) {
+         $max = $1;
+         last;
+      }
+   }
+   close IN;
+   print "graph_title Litespeed : connections (max. $max)\n";
+   print "graph_args --base 1000 -l 0\n";
+   print "graph_scale no\n";
+   print "graph_vlabel connections\n";
+   print "graph_category litespeed\n";
+   print "graph_order used idle\n";
+   print "used.label used\n";
+   print "used.draw AREA\n";
+   print "idle.label idle\n";
+   print "idle.draw LINE1\n";
+   exit 0;
+}
+
+if ( ! -e '/dev/shm/status/.rtreport' ) {
+   print "used.value 0\n";
+   print "idle.value 0\n";
+   exit;
+}
+
+@stats = `ls -a /dev/shm/status/.rtreport*`;
+foreach $rep ( @stats ) {
+   open IN, "<$rep";
+   while ( <IN> ) {
+      if ( /PLAINCONN: (\d+), AVAILCONN: \d+, IDLECONN: (\d+),/ ) {
+         $used += $1;
+         $idle += $2;
+         last;
+      }
+   }
+   close IN;
+}
+print "used.value $used\nidle.value $idle\n";
+exit;

@@ -1,0 +1,52 @@
+#!/usr/bin/perl
+##################################################
+# LiteSpeed webserver : bits per second
+###################################################
+###################################################
+# Modified by Alex $ Mon Apr  8 10:57:04 CEST 2019
+# To work under CentOS Linux release 7
+# www.poralix.com
+##################################################
+if ( $ARGV[0] eq 'autoconf' ) {
+   if ( -e '/dev/shm/status/.rtreport' ) {
+      print "yes\n";
+      exit;
+   } else {
+      print "no\n";
+      exit 1;
+   }
+}
+
+if ( $ARGV[0] eq 'config' ) {
+   print "graph_title Litespeed : bits/sec\n";
+   print "graph_args --base 1000 -l 0\n";
+   print "graph_scale no\n";
+   print "graph_vlabel bits per second\n";
+   print "graph_category litespeed\n";
+   print "bpsout.label out\n";
+   print "bpsout.draw AREA\n";
+   print "bpsin.label in\n";
+   print "bpsin.draw LINE1\n";
+   exit 0;
+}
+
+if ( ! -e '/dev/shm/status/.rtreport' ) {
+   print "bpsin.value 0\n";
+   print "bpsout.value 0\n";
+   exit 0;
+}
+
+@stats = `ls -a /dev/shm/status/.rtreport*`;
+foreach $rep ( @stats ) {
+   open IN, "<$rep";
+   while ( <IN> ) {
+      if ( /^BPS_IN: (\d+), BPS_OUT: (\d+),/ ) {
+         $bpsin += $1;
+         $bpsout += $2;
+         last;
+      }
+   }
+   close IN;
+}
+print "bpsout.value $bpsout\nbpsin.value $bpsin\n";
+exit;
