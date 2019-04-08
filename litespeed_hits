@@ -21,10 +21,13 @@ if ( $ARGV[0] eq 'config' ) {
    print "graph_vlabel hits\n";
    print "graph_category litespeed\n";
    print "hits_total.label Total Static Hits\n";
+   print "hits_total.type DERIVE\n";
    print "hits_total.draw AREA\n";
    print "cache_public.label Total Public Cache Hits\n";
+   print "cache_public.type DERIVE\n";
    print "cache_public.draw LINE1\n";
    print "cache_private.label Total Private Cache Hits\n";
+   print "cache_private.type DERIVE\n";
    print "cache_private.draw LINE1\n";
    exit 0;
 }

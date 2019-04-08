@@ -24,6 +24,7 @@ if ( $ARGV[0] eq 'config' ) {
    print "graph_vlabel requests\n";
    print "graph_category litespeed\n";
    print "rqtot.label Total Req\n";
+   print "rqtot.type DERIVE\n";
    print "rqtot.draw LINE1\n";
    print "rqip.label ReqInProcess\n";
    print "rqip.draw AREA\n";
