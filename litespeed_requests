@@ -19,19 +19,22 @@ if ( $ARGV[0] eq 'autoconf' ) {
 
 if ( $ARGV[0] eq 'config' ) {
    print "graph_title Litespeed : requests\n";
-   print "graph_args --base 1000 -l 0\n";
+   print "graph_args --base 1000 --lower-limit 0\n";
    print "graph_scale no\n";
    print "graph_vlabel requests\n";
    print "graph_category litespeed\n";
-   print "rqtot.label Total Req\n";
-   print "rqtot.type DERIVE\n";
-   print "rqtot.draw LINE1\n";
-   print "rqip.label ReqInProcess\n";
-   print "rqip.draw AREA\n";
-   print "rqps.label ReqPerSecond\n";
-   print "rqps.draw LINE1\n";
-   print "rqtot.label Total Req\n";
-   print "rqtot.draw LINE1\n";
+       print "rqtot.label Total Req\n";
+       print "rqtot.type DERIVE\n";
+       print "rqtot.draw LINE1\n";
+       print "rqtot.min 0\n";
+
+       print "rqip.label ReqInProcess\n";
+       print "rqip.draw AREA\n";
+       print "rqip.min 0\n";
+
+       print "rqps.label ReqPerSecond\n";
+       print "rqps.draw LINE1\n";
+       print "rqps.min 0\n";
    exit 0;
 }
 
@@ -55,5 +58,10 @@ foreach $rep ( @stats ) {
    }
    close IN;
 }
+
+if ($rqtot le 0) { $rqtot = 0; }
+if ($rqip  le 0) { $rqip  = 0; }
+if ($rqps  le 0) { $rqps  = 0; }
+
 print "rqtot.value $rqtot\nrqip.value $rqip\nrqps.value $rqps\n";
 exit;
