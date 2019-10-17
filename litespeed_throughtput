@@ -8,7 +8,7 @@
 # www.poralix.com
 ##################################################
 if ( $ARGV[0] eq 'autoconf' ) {
-   if ( -e '/dev/shm/status/.rtreport' ) {
+   if ( -e '/dev/shm/lsws/status/.rtreport' ) {
       print "yes\n";
       exit;
    } else {
@@ -30,13 +30,13 @@ if ( $ARGV[0] eq 'config' ) {
    exit 0;
 }
 
-if ( ! -e '/dev/shm/status/.rtreport' ) {
+if ( ! -e '/dev/shm/lsws/status/.rtreport' ) {
    print "bpsin.value 0\n";
    print "bpsout.value 0\n";
    exit 0;
 }
 
-@stats = `ls -a /dev/shm/status/.rtreport*`;
+@stats = `ls -a /dev/shm/lsws/status/.rtreport*`;
 foreach $rep ( @stats ) {
    open IN, "<$rep";
    while ( <IN> ) {
